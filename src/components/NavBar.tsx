@@ -1,7 +1,8 @@
+// src/components/NavBar.tsx
 import { Link, NavLink } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
-export default function Navbar() {
+export default function NavBar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur">
       <nav className="mx-auto flex h-14 max-w-7xl items-center px-3 sm:px-4">
@@ -12,7 +13,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Credit */}
+        {/* Center: Author credit (hidden on mobile) */}
         <div className="hidden sm:flex flex-1 justify-center">
           <span className="rounded-full px-3 py-1 text-xs font-medium text-zinc-300/90 ring-1 ring-zinc-700/60">
             by <span className="font-semibold">Sandro Gvenetadze</span>
@@ -20,7 +21,7 @@ export default function Navbar() {
         </div>
 
         {/* Right: Nav + Theme */}
-        <div className="min-w-0 flex-1 items-center justify-end gap-3 sm:gap-4 flex">
+        <div className="min-w-0 flex flex-1 items-center justify-end gap-3 sm:gap-4">
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -41,7 +42,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile-only credit (ქვემოთ, რომ არ აირიოს ლეიაუითი) */}
+      {/* Mobile-only credit */}
       <div className="sm:hidden flex justify-center py-2">
         <span className="rounded-full px-3 py-1 text-xs font-medium text-zinc-300/90 ring-1 ring-zinc-700/60">
           by <span className="font-semibold">Sandro Gvenetadze</span>

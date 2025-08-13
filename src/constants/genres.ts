@@ -1,3 +1,5 @@
+// src/constants/genres.ts
+// TMDB genre id -> name map
 export const TMDB_GENRES: Record<number, string> = {
   28: "Action",
   12: "Adventure",
