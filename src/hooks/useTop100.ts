@@ -1,25 +1,92 @@
-// src/hooks/useTop100.ts
-// Fetch Top Rated movies from TMDb (pages 1..5). Fallback to local JSON if API fails.
-// Caches to localStorage for perf and to survive rate limits.
 import { useEffect, useState } from 'react';
 
 export type Movie = {
-  id: string;
+  id: number;
   title: string;
-  image: string;
+  image: string;        // poster full url (or placeholder)
+  backdrop: string;     // backdrop full url (or placeholder)
   year: number;
-  genres: string[];
+  genres: number[];     // numeric ids
   rating?: number;
   plot?: string;
 };
 
 type Result = { movies: Movie[]; loading: boolean; source: 'TMDB' | 'FALLBACK' };
 
-const CACHE_KEY = 'top100.cache.v2';
-const CACHE_AT = 'top100.cacheAt.v2';
+const CACHE_KEY = 'top100.cache.v4';
+const CACHE_AT  = 'top100.cacheAt.v4';
 const STALE_MS = 1000 * 60 * 60 * 24; // 24h
 
 const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+const FALLBACK_POSTER = '/placeholder.svg';
+const FALLBACK_BACKDROP = '/backdrop-placeholder.jpg';
+
+async function fetchTMDbTop100ViaProxy(): Promise<Movie[]> {
+  const pages = [1, 2, 3, 4, 5];
+  const results: any[] = [];
+  for (const page of pages) {
+    const res = await fetch(`/api/tmdb?path=/movie/top_rated&language=en-US&page=${page}`);
+    if (!res.ok) throw new Error('TMDb proxy failed: ' + res.status);
+    const json = await res.json();
+    results.push(...(json.results || []));
+  }
+  return results.slice(0, 100).map((m: any) => {
+    const posterFull = m.poster_path ? `${IMG_BASE}${m.poster_path}` : FALLBACK_POSTER;
+    const backdropFull = m.backdrop_path ? `${IMG_BASE}${m.backdrop_path}` : FALLBACK_BACKDROP;
+    return {
+      id: m.id,
+      title: m.title || m.name || 'Untitled',
+      image: posterFull,
+      backdrop: backdropFull,
+      year: m.release_date ? Number(String(m.release_date).slice(0, 4)) : NaN,
+      genres: Array.isArray(m.genre_ids) ? m.genre_ids : [],
+      rating: typeof m.vote_average === 'number' ? m.vote_average : undefined,
+      plot: m.overview || ''
+    } as Movie;
+  });
+}
+
+async function fetchFallback(): Promise<Movie[]> {
+  const res = await fetch('/top100.fallback.json');
+  if (!res.ok) throw new Error('Fallback JSON missing');
+  const arr = await res.json();
+
+  const pickPoster = (m: any) => {
+    const p =
+      m.poster_path ??
+      m.poster ??
+      m.image ??
+      m.posterUrl ?? m.posterURL ?? null;
+
+    if (!p) return FALLBACK_POSTER;
+    if (typeof p === 'string' && p.startsWith('http')) return p;
+    if (typeof p === 'string') return `${IMG_BASE}${p.startsWith('/') ? p : '/' + p}`;
+    return FALLBACK_POSTER;
+  };
+
+  const pickBackdrop = (m: any) => {
+    const b =
+      m.backdrop_path ??
+      m.backdrop ??
+      m.backdropUrl ?? m.backdropURL ?? null;
+
+    if (!b) return FALLBACK_BACKDROP;
+    if (typeof b === 'string' && b.startsWith('http')) return b;
+    if (typeof b === 'string') return `${IMG_BASE}${b.startsWith('/') ? b : '/' + b}`;
+    return FALLBACK_BACKDROP;
+  };
+
+  return (arr as any[]).slice(0, 100).map((m: any) => ({
+    id: m.id,
+    title: m.title || m.name || 'Untitled',
+    image: pickPoster(m),
+    backdrop: pickBackdrop(m),
+    year: m.release_date ? Number(String(m.release_date).slice(0, 4)) : (m.year ?? NaN),
+    genres: Array.isArray(m.genre_ids) ? m.genre_ids : (m.genres ?? []),
+    rating: typeof m.vote_average === 'number' ? m.vote_average : (m.rating ?? undefined),
+    plot: m.overview || m.plot || ''
+  }));
+}
 
 export function useTop100(): Result {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -27,75 +94,41 @@ export function useTop100(): Result {
   const [source, setSource] = useState<'TMDB' | 'FALLBACK'>('TMDB');
 
   useEffect(() => {
-    let alive = true;
-    (async () => {
-      // Try cache first
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        const at = Number(localStorage.getItem(CACHE_AT) || 0);
-        if (cached && Date.now() - at < STALE_MS) {
-          const data = JSON.parse(cached) as Movie[];
-          if (alive) { setMovies(data); setLoading(false); setSource('TMDB'); }
-          return;
-        }
-      } catch {}
+    const now = Date.now();
+    const cached = localStorage.getItem(CACHE_KEY);
+    const cachedAt = Number(localStorage.getItem(CACHE_AT) || 0);
 
-      // Fetch TMDb top rated pages 1..5 (100 movies)
+    if (cached && now - cachedAt < STALE_MS) {
       try {
-        const API_KEY = import.meta.env.VITE_TMDB_API_KEY as string;
-        const fetchPage = async (page: number) => {
-          const res = await fetch(`https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}&api_key=${API_KEY}`);
-          if (!res.ok) throw new Error('TMDb error');
-          return res.json();
-        };
-        const pages = await Promise.all([1,2,3,4,5].map(fetchPage));
-        const items = pages.flatMap(p => p.results).slice(0, 100);
-        const mapped: Movie[] = items.map((m: any) => ({
-          id: String(m.id),
-          title: m.title ?? m.name ?? 'Untitled',
-          image: m.poster_path ? `${IMG_BASE}${m.poster_path}` : '/placeholder.svg',
-          year: m.release_date ? Number(String(m.release_date).slice(0,4)) : 0,
-          genres: [], // Could be enriched with genre map if needed
-          rating: typeof m.vote_average === 'number' ? Number(m.vote_average.toFixed(1)) : undefined,
-          plot: m.overview || undefined,
-        }));
-        if (!alive) return;
-        setMovies(mapped);
+        const parsed = JSON.parse(cached) as Movie[];
+        setMovies(parsed);
         setSource('TMDB');
+        setLoading(false);
+        return;
+      } catch {}
+    }
+
+    (async () => {
+      try {
+        const tmdb = await fetchTMDbTop100ViaProxy();
+        setMovies(tmdb);
+        setSource('TMDB');
+        localStorage.setItem(CACHE_KEY, JSON.stringify(tmdb));
+        localStorage.setItem(CACHE_AT, String(Date.now()));
+      } catch {
         try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(mapped));
-          localStorage.setItem(CACHE_AT, String(Date.now()));
-        } catch {}
-      } catch (err) {
-        // Fallback to local JSON
-        try {
-          const res = await fetch('/top100.fallback.json');
-          const raw = await res.json();
-          const mapped: Movie[] = raw.map((m: any) => ({
-            id: String(m.id ?? crypto.randomUUID()),
-            title: m.title,
-            image: m.image || '/placeholder.svg',
-            year: Number(m.year) || 0,
-            genres: (m.genre ?? []).map((g: any) => String(g)),
-            rating: m.rating ? Number(m.rating) : undefined,
-            plot: m.description || undefined,
-          }));
-          if (!alive) return;
-          setMovies(mapped);
+          const fb = await fetchFallback();
+          setMovies(fb);
           setSource('FALLBACK');
-          setLoading(false);
-          try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify(mapped));
-            localStorage.setItem(CACHE_AT, String(Date.now()));
-          } catch {}
+          localStorage.setItem(CACHE_KEY, JSON.stringify(fb));
+          localStorage.setItem(CACHE_AT, String(Date.now()));
         } catch {
-          if (alive) { setMovies([]); setSource('FALLBACK'); setLoading(false); }
+          setMovies([]);
         }
       } finally {
-        if (alive) setLoading(false);
+        setLoading(false);
       }
     })();
-    return () => { alive = false; };
   }, []);
 
   return { movies, loading, source };
