@@ -1,29 +1,59 @@
-import { useEffect, useState } from "react";
-import type { Movie } from "@/hooks/useTop100";
+// src/hooks/useFavorites.ts
+// Robust favorites hook storing movie IDs in localStorage.
 
-const FAV_KEY = "movie.favorites.v1";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+const STORAGE_KEY = "favorites:v1";
+
+function readFromStorage(): number[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((x) => Number(x))
+        .filter((x) => Number.isFinite(x));
+    }
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function writeToStorage(ids: number[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  } catch {
+    // ignore quota errors
+  }
+}
 
 export function useFavorites() {
-  const [ids, setIds] = useState<string[]>([]);
+  const [ids, setIds] = useState<number[]>(() => readFromStorage());
 
+  // Persist on change
   useEffect(() => {
-    const raw = localStorage.getItem(FAV_KEY);
-    setIds(raw ? JSON.parse(raw) : []);
+    writeToStorage(ids);
+  }, [ids]);
+
+  const set = useMemo(() => new Set(ids), [ids]);
+
+  const isFav = useCallback((id: number) => set.has(id), [set]);
+
+  const toggle = useCallback((id: number) => {
+    setIds((prev) => {
+      const s = new Set(prev);
+      if (s.has(id)) {
+        s.delete(id);
+      } else {
+        s.add(id);
+      }
+      return Array.from(s);
+    });
   }, []);
 
-  function toggle(movie: Movie) {
-    setIds((prev) => {
-      const next = prev.includes(movie.id)
-        ? prev.filter((i) => i !== movie.id)
-        : [...prev, movie.id];
-      localStorage.setItem(FAV_KEY, JSON.stringify(next));
-      return next;
-    });
-  }
+  const clearAll = useCallback(() => setIds([]), []);
 
-  function isFav(id: string) {
-    return ids.includes(id);
-  }
-
-  return { ids, toggle, isFav };
+  return { ids, isFav, toggle, clearAll };
 }

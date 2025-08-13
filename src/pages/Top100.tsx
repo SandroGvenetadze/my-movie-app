@@ -1,4 +1,6 @@
 // src/pages/Top100.tsx
+// Top list page: robust favorites, responsive grid, stable card heights.
+
 import { useMemo, useState } from "react";
 import { useTop100 } from "@/hooks/useTop100";
 import MovieCard from "@/components/MovieCard";
@@ -17,7 +19,8 @@ export default function Top100() {
     const q = query.trim().toLowerCase();
     const y = year.trim();
     return movies.filter((m) => {
-      const matchQ = !q || (m.title || m.name || "").toLowerCase().includes(q);
+      const title = (m.title || m.name || "").toLowerCase();
+      const matchQ = !q || title.includes(q);
       const movieYear =
         m.year ?? (m.release_date ? new Date(m.release_date).getFullYear() : undefined);
       const matchY = !y || String(movieYear) === y;
@@ -46,7 +49,7 @@ export default function Top100() {
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
                   key={i}
-                  className="cv-auto h-full animate-fade-in"
+                  className="h-full animate-fade-in"
                   style={{ animationDelay: `${i * 40}ms` }}
                 >
                   <SkeletonCard />
@@ -58,7 +61,7 @@ export default function Top100() {
               {filtered.map((m, i) => (
                 <div
                   key={m.id}
-                  className="cv-auto h-full animate-fade-in"
+                  className="h-full animate-fade-in"
                   style={{ animationDelay: `${i * 40}ms` }}
                 >
                   <MovieCard movie={m} isFav={isFav(m.id)} onToggle={toggle} />

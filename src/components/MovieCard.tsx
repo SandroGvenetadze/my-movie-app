@@ -1,6 +1,5 @@
 // src/components/MovieCard.tsx
-// Cards are equal height; Favorite button is reliably clickable;
-// Button row has comfy spacing.
+// Equal-height cards, subtle hover glow, genres near rating, and reliable Favorite toggle.
 
 import { Link } from "react-router-dom";
 import { TMDB_GENRES } from "@/constants/genres";
@@ -66,11 +65,15 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
       .map((g) => (typeof g === "string" ? g : g.name))
       .filter(Boolean) as string[];
   }
-  // Keep max 2 to avoid wrapping and height jumps
-  genreNames = genreNames.slice(0, 2);
+  // Keep max 2 (on sm: up to 3) to avoid wrapping and height jumps
+  const maxGenres = 2;
+  genreNames = genreNames.slice(0, maxGenres);
 
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-xl bg-zinc-900/60 ring-1 ring-zinc-800 transition hover:ring-zinc-700">
+    <div
+      className="group flex h-full flex-col overflow-hidden rounded-xl bg-zinc-900/60 ring-1 ring-zinc-800 transition
+                 hover:ring-indigo-500/40 hover:shadow-lg hover:shadow-indigo-500/10 hover:brightness-[1.02]"
+    >
       {/* Poster */}
       <div className="aspect-[2/3] w-full overflow-hidden">
         <img
@@ -92,8 +95,8 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
           {title}
         </div>
 
-        {/* Meta badges: fixed min height to keep rows aligned */}
-        <div className="mt-2 flex items-center gap-2 text-[11px] text-zinc-300/90 min-h-6">
+        {/* Meta row: year, rating, genres */}
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-zinc-300/90 min-h-6">
           <span className="rounded-md bg-zinc-800/70 px-2 py-0.5 ring-1 ring-zinc-700/60">
             {year}
           </span>
@@ -120,19 +123,21 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
           <button
             type="button"
             onClick={(e) => {
-              // Prevent any parent click handlers from hijacking the click
+              // Prevent bubbling and toggle favorite ID
               e.stopPropagation();
               onToggle(movie.id);
             }}
             aria-pressed={isFav}
-            className="w-full rounded-lg bg-zinc-800/70 py-1.5 text-xs font-medium text-zinc-200 ring-1 ring-zinc-700/60 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+            className="w-full rounded-lg bg-zinc-800/70 py-1.5 text-xs font-medium text-zinc-200 ring-1 ring-zinc-700/60
+                       hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
           >
             {isFav ? "Unfavorite" : "Favorite"}
           </button>
 
           <Link
             to={`/details/${movie.id}`}
-            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
+            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
           >
             Details
           </Link>
