@@ -1,57 +1,26 @@
+# Movie App Starter (React + Vite + TypeScript + Tailwind)
 
-# Movie App Starter (React + Vite + TS + Tailwind)
+A starter movie app with modern frontend tools, local favorites, and a secure TMDb integration.
 
-Features:
-- Top 100 list (placeholder RapidAPI client)
-- Details page
-- Favorites (localStorage)
-- Mock auth with persistent session
-- Protected route for /favorites
-- Clean UI with Tailwind
+---
+
+## Features
+
+- **Top 100 Movies** from TMDb (via a secure Vercel serverless proxy + local fallback data)
+- **Movie Details Page** (poster, backdrop, rating, year, genres, plot, top cast)
+- **Favorites** stored in `localStorage`
+- **Mock Authentication** with persistent session
+- **Protected Routes** (e.g., `/favorites`)
+- **Responsive UI** with Tailwind CSS
+- **Light/Dark mode** toggle
+- **Fallback JSON** used if the API is down or rate-limited
+
+---
 
 ## Setup
 
-1) Install deps
+### 1) Install dependencies
+
 ```bash
-npm i
+npm install
 ```
-
-2) Configure RapidAPI
-- Copy `.env.example` to `.env` and set:
-  - `VITE_RAPIDAPI_KEY`
-  - `VITE_RAPIDAPI_HOST`
-  - `VITE_RAPIDAPI_BASEURL`
-- Update endpoints in `src/api/rapidapi.ts` (`/top-100`, `/title/:id`) according to the exact API you choose on RapidAPI.
-
-3) Run
-```bash
-npm run dev
-```
-
-## Notes
-- Replace mock auth in `src/context/AuthContext.tsx` with Firebase/Auth if needed.
-- The list/detail mappers normalize various API shapes; adjust to match your API schema.
-
-
-
-## Secure Setup (TMDb Proxy on Vercel)
-
-1. Create **Environment Variable** on Vercel:
-   - Key: `TMDB_BEARER`
-   - Value: your TMDb v4 API Read Access Token (Bearer)
-
-2. Deploy. The frontend calls `/api/tmdb?path=/movie/top_rated&page=1..5`.
-   - The serverless function injects the bearer token on the server.
-   - No API keys are exposed to the client or repo.
-
-3. Local development:
-   - Create `.env.local` (not committed) with:
-     ```
-     TMDB_BEARER=YOUR_TMDB_V4_TOKEN
-     ```
-   - Run `npm install` then `npm run dev`.
-
-4. Safety:
-   - `.gitignore` ignores `.env*`, `node_modules/`, `dist/`.
-   - No secret files committed.
-
