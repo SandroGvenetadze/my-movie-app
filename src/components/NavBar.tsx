@@ -1,44 +1,52 @@
-// src/components/NavBar.tsx
-import { NavLink } from 'react-router-dom';
-import ThemeToggle from '@/components/ThemeToggle';
-import { useState } from 'react';
+import { Link, NavLink } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
-export default function NavBar() {
-  const [open, setOpen] = useState(false);
-
+export default function Navbar() {
   return (
-    <header
-      className="sticky top-0 z-40
-                 bg-white/85 dark:bg-zinc-900/85
-                 border-b border-black/5 dark:border-white/10"
-    >
-      <div className="container mx-auto flex items-center justify-between py-3 px-4 lg:px-6">
-        <NavLink to="/" className="font-bold text-lg tracking-tight">
-          <span className="text-indigo-600 dark:text-indigo-400">Top</span>
-          <span className="text-zinc-900 dark:text-white">Movies</span>
-        </NavLink>
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur">
+      <nav className="mx-auto flex h-14 max-w-7xl items-center px-3 sm:px-4">
+        {/* Left: Logo */}
+        <div className="min-w-0 flex-1">
+          <Link to="/" className="font-semibold tracking-tight">
+            <span className="text-sky-400">Top</span>Movies
+          </Link>
+        </div>
 
-        <nav className="hidden md:flex items-center gap-4 text-sm">
-          <NavLink to="/" className="text-zinc-700 dark:text-zinc-200 hover:text-indigo-600">Top 100</NavLink>
-          <NavLink to="/favorites" className="text-zinc-700 dark:text-zinc-200 hover:text-indigo-600">Favorites</NavLink>
-          <ThemeToggle />
-        </nav>
+        {/* Center: Credit */}
+        <div className="hidden sm:flex flex-1 justify-center">
+          <span className="rounded-full px-3 py-1 text-xs font-medium text-zinc-300/90 ring-1 ring-zinc-700/60">
+            by <span className="font-semibold">Sandro Gvenetadze</span>
+          </span>
+        </div>
 
-        <button
-          className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg
-                     bg-black/5 dark:bg-white/10 border border-black/5 dark:border-white/10"
-          onClick={() => setOpen(v => !v)} aria-label="Menu">
-          <span className="i">≡</span>
-        </button>
-      </div>
-
-      {open && (
-        <div className="md:hidden border-t border-black/5 dark:border-white/10 px-4 py-3 space-y-2">
-          <NavLink to="/" onClick={() => setOpen(false)} className="block text-zinc-700 dark:text-zinc-200">Top 100</NavLink>
-          <NavLink to="/favorites" onClick={() => setOpen(false)} className="block text-zinc-700 dark:text-zinc-200">Favorites</NavLink>
+        {/* Right: Nav + Theme */}
+        <div className="min-w-0 flex-1 items-center justify-end gap-3 sm:gap-4 flex">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `text-sm ${isActive ? "text-white" : "text-zinc-300"}`
+            }
+          >
+            Top 100
+          </NavLink>
+          <NavLink
+            to="/favorites"
+            className={({ isActive }) =>
+              `text-sm ${isActive ? "text-white" : "text-zinc-300"}`
+            }
+          >
+            Favorites
+          </NavLink>
           <ThemeToggle />
         </div>
-      )}
+      </nav>
+
+      {/* Mobile-only credit (ქვემოთ, რომ არ აირიოს ლეიაუითი) */}
+      <div className="sm:hidden flex justify-center py-2">
+        <span className="rounded-full px-3 py-1 text-xs font-medium text-zinc-300/90 ring-1 ring-zinc-700/60">
+          by <span className="font-semibold">Sandro Gvenetadze</span>
+        </span>
+      </div>
     </header>
   );
 }

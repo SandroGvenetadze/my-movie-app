@@ -1,82 +1,62 @@
-// src/components/MovieCard.tsx
-// Movie card with cinematic poster glow, light-weight hover, and robust image fallback.
+import { TMDB_GENRES } from "@/constants/genres";
 
-import { Link } from 'react-router-dom';
-
-export type Movie = {
-  id: string;
+type Movie = {
+  id: number;
   title: string;
-  image: string; // poster url or '/placeholder.svg'
-  year: number;
-  genres: string[];
-  rating?: number;
-  plot?: string;
+  poster_path: string | null;
+  release_date?: string;
+  vote_average?: number;
+  genre_ids?: number[];
+  // ... დანარჩენი რომ გაქვს
 };
 
-type Props = { movie: Movie; isFav: boolean; onToggle: (movie: Movie) => void };
+function getYear(date?: string) {
+  return date ? new Date(date).getFullYear() : "—";
+}
 
-export default function MovieCard({ movie, isFav, onToggle }: Props) {
+export default function MovieCard({ movie }: { movie: Movie }) {
+  const year = getYear(movie.release_date);
+  const rating = movie.vote_average ? movie.vote_average.toFixed(1) : "—";
+  const genreNames =
+    (movie.genre_ids || [])
+      .map((id) => TMDB_GENRES[id])
+      .filter(Boolean)
+      .slice(0, 3); // მხოლოდ 3 ჟანრი, რომ ლეიაუითი არ დაიშალოს
+
   return (
-    <article className="group card p-3 sm:p-4 hover:-translate-y-0.5 transition">
-      <div className="poster w-full aspect-[2/3] rounded-xl mb-3 bg-black/10 dark:bg-white/5">
-        <img
-          src={movie.image || '/placeholder.svg'}
-          alt={movie.title}
-          loading="lazy"
-          decoding="async"
-          fetchpriority="low"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/placeholder.svg'; }}
-          className="w-full h-full object-cover block transition-transform duration-500 ease-smooth group-hover:scale-[1.02]"
-        />
-      </div>
+    <div className="group rounded-xl bg-zinc-900/60 ring-1 ring-zinc-800 overflow-hidden">
+      {/* პოსტერები და ზედა ნაწილი უცვლელია */}
+      {/* ... */}
 
-      <h3 className="font-semibold leading-tight mb-1 line-clamp-2">{movie.title}</h3>
-
-      <div className="flex items-center flex-wrap gap-2 text-sm mb-3">
-        <span className="px-2 py-0.5 rounded-full border border-black/5 dark:border-white/10 text-zinc-600 dark:text-zinc-300">
-          {movie.year || '—'}
-        </span>
-
-        {typeof movie.rating === 'number' && (
-          <span
-            className="px-2 py-0.5 text-xs rounded-full border
-                       bg-indigo-500/15 text-indigo-500 border-indigo-500/30"
-            title="TMDb average"
-          >
-            ★ {movie.rating.toFixed(1)}
+      {/* ქვედა მეტა-ბარი */}
+      <div className="px-4 pb-3">
+        <div className="flex items-center gap-3 text-[11px] text-zinc-300/90">
+          <span className="rounded-md bg-zinc-800/70 px-2 py-0.5 ring-1 ring-zinc-700/60">
+            {year}
           </span>
-        )}
-
-        {movie.genres?.slice(0, 2).map((g) => (
-          <span
-            key={g}
-            className="px-2 py-0.5 text-xs rounded-full bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-300"
-          >
-            {g}
+          <span className="rounded-md bg-zinc-800/70 px-2 py-0.5 ring-1 ring-zinc-700/60">
+            ⭐ {rating}
           </span>
-        ))}
-      </div>
 
-      <div className="grid grid-cols-[1fr_auto] gap-2">
-        <button
-          onClick={() => onToggle(movie)}
-          className={`h-10 rounded-xl border transition ${
-            isFav
-              ? 'bg-amber-500/15 text-amber-600 border-amber-500/40'
-              : 'bg-black/5 dark:bg-white/10 text-inherit border-black/5 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/20'
-          }`}
-        >
-          {isFav ? 'Favorited' : 'Favorite'}
-        </button>
-
-        <Link
-          to={`/details/${movie.id}`}
-          className="h-10 px-3 rounded-xl bg-indigo-600 text-white inline-flex items-center justify-center hover:brightness-110 active:brightness-95 transition"
-        >
-          Details
-        </Link>
+          {/* ჟანრების ბეჯები */}
+          <div className="flex flex-wrap gap-1">
+            {genreNames.length
+              ? genreNames.map((g) => (
+                  <span
+                    key={g}
+                    className="rounded-md bg-zinc-800/70 px-2 py-0.5 ring-1 ring-zinc-700/60"
+                  >
+                    {g}
+                  </span>
+                ))
+              : (
+                <span className="rounded-md bg-zinc-800/70 px-2 py-0.5 ring-1 ring-zinc-700/60">
+                  Genre
+                </span>
+              )}
+          </div>
+        </div>
       </div>
-    </article>
+    </div>
   );
 }
