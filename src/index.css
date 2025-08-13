@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Global base ===== */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark body {
+  background-color: #0a0a0a;
+  color: #fff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Utility for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== Animations ===== */
+
+/* Card fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fadeIn 0.35s ease forwards;
+}
+
+/* Grid child transition (subtle) */
+.grid-animate > * {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+html:not(.dark) .shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.04) 0%,
+    rgba(0, 0, 0, 0.12) 50%,
+    rgba(0, 0, 0, 0.04) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* Page transition */
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-fade {
+  animation: pageFade 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Cinematic glow overlay for posters */
+.poster {
+  position: relative;
+  overflow: hidden;
+}
+.poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+      120% 60% at 50% 110%,
+      rgba(99, 102, 241, 0.28) 0%,
+      rgba(99, 102, 241, 0) 60%
+    ),
+    radial-gradient(
+      80% 40% at -10% 10%,
+      rgba(14, 165, 233, 0.18) 0%,
+      rgba(14, 165, 233, 0) 70%
+    ),
+    radial-gradient(
+      80% 40% at 110% -10%,
+      rgba(236, 72, 153, 0.18) 0%,
+      rgba(236, 72, 153, 0) 70%
+    );
+}
+.group:hover .poster::after {
+  opacity: 0.9;
+}
+
+/* --- Performance helpers --- */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 420px; /* approx card height */
+}
+
+/* Card default styles - softer shadow */
+.card {
+  @apply rounded-2xl bg-white/80 dark:bg-white/5 border border-black/5 dark:border-white/10 transition;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: reduces motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .page-fade {
+    animation: none !important;
+  }
+}

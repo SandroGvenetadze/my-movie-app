@@ -1,0 +1,92 @@
+[
+  {
+    "id": "tt0111161",
+    "title": "The Shawshank Redemption",
+    "image": "/placeholder.svg",
+    "genre": ["Drama"],
+    "year": "1994",
+    "rating": 9.3,
+    "description": "Two imprisoned men bond over years, finding solace and eventual redemption."
+  },
+  {
+    "id": "tt0068646",
+    "title": "The Godfather",
+    "image": "/placeholder.svg",
+    "genre": ["Crime", "Drama"],
+    "year": "1972",
+    "rating": 9.2,
+    "description": "The aging patriarch of an organized crime dynasty transfers control to his reluctant son."
+  },
+  {
+    "id": "tt0468569",
+    "title": "The Dark Knight",
+    "image": "/placeholder.svg",
+    "genre": ["Action", "Crime", "Drama"],
+    "year": "2008",
+    "rating": 9.0,
+    "description": "Batman faces the Joker, a criminal mastermind who plunges Gotham into chaos."
+  },
+  {
+    "id": "tt0071562",
+    "title": "The Godfather Part II",
+    "image": "/placeholder.svg",
+    "genre": ["Crime", "Drama"],
+    "year": "1974",
+    "rating": 9.0,
+    "description": "The early life and career of Vito Corleone and his son Michael's expansion of the family business."
+  },
+  {
+    "id": "tt0108052",
+    "title": "Schindler's List",
+    "image": "/placeholder.svg",
+    "genre": ["Biography", "Drama", "History"],
+    "year": "1993",
+    "rating": 9.0,
+    "description": "In German-occupied Poland during WWII, Oskar Schindler gradually becomes concerned for his Jewish workforce."
+  },
+  {
+    "id": "tt0167260",
+    "title": "The Lord of the Rings: The Return of the King",
+    "image": "/placeholder.svg",
+    "genre": ["Action", "Adventure", "Drama"],
+    "year": "2003",
+    "rating": 9.0,
+    "description": "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam."
+  },
+  {
+    "id": "tt0110912",
+    "title": "Pulp Fiction",
+    "image": "/placeholder.svg",
+    "genre": ["Crime", "Drama"],
+    "year": "1994",
+    "rating": 8.9,
+    "description": "The lives of two mob hitmen, a boxer, a gangster's wife, and a pair of diner bandits intertwine."
+  },
+  {
+    "id": "tt0120737",
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "image": "/placeholder.svg",
+    "genre": ["Action", "Adventure", "Drama"],
+    "year": "2001",
+    "rating": 8.9,
+    "description": "A meek Hobbit and eight companions set out on a journey to destroy the One Ring."
+  },
+  {
+    "id": "tt0137523",
+    "title": "Fight Club",
+    "image": "/placeholder.svg",
+    "genre": ["Drama"],
+    "year": "1999",
+    "rating": 8.8,
+    "description": "An insomniac office worker and a soap maker form an underground fight club."
+  },
+  {
+    "id": "tt0133093",
+    "title": "The Matrix",
+    "image": "/placeholder.svg",
+    "genre": ["Action", "Sci-Fi"],
+    "year": "1999",
+    "rating": 8.7,
+    "description": "A computer hacker learns the true nature of his reality and his role in the war against its controllers."
+  }
+]

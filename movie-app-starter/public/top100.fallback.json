@@ -1,0 +1,92 @@
+[
+  {
+    "id": "tt0111161",
+    "title": "The Shawshank Redemption",
+    "image": "https://via.placeholder.com/300x450?text=Shawshank",
+    "genre": ["Drama"],
+    "year": "1994",
+    "rating": 9.3,
+    "description": "Two imprisoned men bond over years, finding solace and eventual redemption."
+  },
+  {
+    "id": "tt0068646",
+    "title": "The Godfather",
+    "image": "https://via.placeholder.com/300x450?text=The+Godfather",
+    "genre": ["Crime", "Drama"],
+    "year": "1972",
+    "rating": 9.2,
+    "description": "The aging patriarch of an organized crime dynasty transfers control to his reluctant son."
+  },
+  {
+    "id": "tt0468569",
+    "title": "The Dark Knight",
+    "image": "https://via.placeholder.com/300x450?text=The+Dark+Knight",
+    "genre": ["Action", "Crime", "Drama"],
+    "year": "2008",
+    "rating": 9.0,
+    "description": "Batman faces the Joker, a criminal mastermind who plunges Gotham into chaos."
+  },
+  {
+    "id": "tt0071562",
+    "title": "The Godfather Part II",
+    "image": "https://via.placeholder.com/300x450?text=Godfather+II",
+    "genre": ["Crime", "Drama"],
+    "year": "1974",
+    "rating": 9.0,
+    "description": "The early life and career of Vito Corleone and his son Michael's expansion of the family business."
+  },
+  {
+    "id": "tt0108052",
+    "title": "Schindler's List",
+    "image": "https://via.placeholder.com/300x450?text=Schindler%27s+List",
+    "genre": ["Biography", "Drama", "History"],
+    "year": "1993",
+    "rating": 9.0,
+    "description": "In German-occupied Poland, Oskar Schindler becomes concerned for his Jewish workforce."
+  },
+  {
+    "id": "tt0167260",
+    "title": "The Lord of the Rings: The Return of the King",
+    "image": "https://via.placeholder.com/300x450?text=LOTR+ROTK",
+    "genre": ["Adventure", "Drama", "Fantasy"],
+    "year": "2003",
+    "rating": 9.0,
+    "description": "Gandalf and Aragorn lead the world of men against Sauron's army to draw his gaze from Frodo."
+  },
+  {
+    "id": "tt0110912",
+    "title": "Pulp Fiction",
+    "image": "https://via.placeholder.com/300x450?text=Pulp+Fiction",
+    "genre": ["Crime", "Drama"],
+    "year": "1994",
+    "rating": 8.9,
+    "description": "The lives of two mob hitmen, a boxer, and others intertwine in four tales of violence and redemption."
+  },
+  {
+    "id": "tt0120737",
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "image": "https://via.placeholder.com/300x450?text=LOTR+FOTR",
+    "genre": ["Adventure", "Drama", "Fantasy"],
+    "year": "2001",
+    "rating": 8.8,
+    "description": "A meek Hobbit sets out on a journey to destroy the One Ring."
+  },
+  {
+    "id": "tt0137523",
+    "title": "Fight Club",
+    "image": "https://via.placeholder.com/300x450?text=Fight+Club",
+    "genre": ["Drama"],
+    "year": "1999",
+    "rating": 8.8,
+    "description": "An insomniac office worker forms an underground fight club with a soap maker."
+  },
+  {
+    "id": "tt0133093",
+    "title": "The Matrix",
+    "image": "https://via.placeholder.com/300x450?text=The+Matrix",
+    "genre": ["Action", "Sci-Fi"],
+    "year": "1999",
+    "rating": 8.7,
+    "description": "A hacker discovers the nature of his reality and his role in the war against its controllers."
+  }
+]
