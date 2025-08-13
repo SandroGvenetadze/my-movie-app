@@ -31,10 +31,7 @@ export default function Top100() {
       <main className="page-fade">
         <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-6">
           <div className="mb-4 flex items-center justify-between">
-            <div
-              className="rounded-full border border-black/5 bg-emerald-500/10 px-2 py-1 text-xs
-                         text-emerald-600 dark:border-white/10 dark:text-emerald-400 sm:text-sm"
-            >
+            <div className="rounded-full border border-black/5 bg-emerald-500/10 px-2 py-1 text-xs text-emerald-600 dark:border-white/10 dark:text-emerald-400 sm:text-sm">
               Source: {source}
             </div>
             <div className="text-xs text-zinc-500">Total: {filtered.length}</div>
@@ -49,7 +46,7 @@ export default function Top100() {
               {Array.from({ length: 12 }).map((_, i) => (
                 <div
                   key={i}
-                  className="cv-auto animate-fade-in"
+                  className="cv-auto h-full animate-fade-in"
                   style={{ animationDelay: `${i * 40}ms` }}
                 >
                   <SkeletonCard />
@@ -61,7 +58,7 @@ export default function Top100() {
               {filtered.map((m, i) => (
                 <div
                   key={m.id}
-                  className="cv-auto animate-fade-in"
+                  className="cv-auto h-full animate-fade-in"
                   style={{ animationDelay: `${i * 40}ms` }}
                 >
                   <MovieCard movie={m} isFav={isFav(m.id)} onToggle={toggle} />

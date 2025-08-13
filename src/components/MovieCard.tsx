@@ -1,4 +1,7 @@
 // src/components/MovieCard.tsx
+// Cards are equal height: outer container is flex-col; title has min height;
+// meta row has fixed min height; actions are pushed to bottom with mt-auto.
+
 import { Link } from "react-router-dom";
 import { TMDB_GENRES } from "@/constants/genres";
 
@@ -56,7 +59,6 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
 
   // Build genre names from either genre_ids or genres array
   let genreNames: string[] = [];
-
   if (Array.isArray(movie.genre_ids) && movie.genre_ids.length > 0) {
     genreNames = movie.genre_ids
       .map((id) => TMDB_GENRES[id])
@@ -66,14 +68,13 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
       .map((g) => (typeof g === "string" ? g : g.name))
       .filter(Boolean) as string[];
   }
-
-  // Keep max 3 to avoid layout overflow
-  genreNames = genreNames.slice(0, 3);
+  // Keep max 2 to avoid wrapping and height jumps
+  genreNames = genreNames.slice(0, 2);
 
   return (
-    <div className="group overflow-hidden rounded-xl bg-zinc-900/60 ring-1 ring-zinc-800 transition hover:ring-zinc-700">
+    <div className="group flex h-full flex-col overflow-hidden rounded-xl bg-zinc-900/60 ring-1 ring-zinc-800 transition hover:ring-zinc-700">
       {/* Poster */}
-      <div className="aspect-[2/3] overflow-hidden">
+      <div className="aspect-[2/3] w-full overflow-hidden">
         <img
           src={getPoster(movie)}
           alt={title}
@@ -86,14 +87,15 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
         />
       </div>
 
-      {/* Title */}
-      <div className="px-4 pt-3 text-sm font-medium text-zinc-200 line-clamp-2">
-        {title}
-      </div>
+      {/* Content */}
+      <div className="flex flex-1 flex-col px-4 pt-3 pb-3">
+        {/* Title: fixed min height for two lines */}
+        <div className="text-sm font-medium text-zinc-200 line-clamp-2 min-h-[40px]">
+          {title}
+        </div>
 
-      {/* Meta badges */}
-      <div className="px-4 pt-2 pb-3">
-        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-300/90">
+        {/* Meta badges: fixed min height to keep rows aligned */}
+        <div className="mt-2 flex items-center gap-2 text-[11px] text-zinc-300/90 min-h-6">
           <span className="rounded-md bg-zinc-800/70 px-2 py-0.5 ring-1 ring-zinc-700/60">
             {year}
           </span>
@@ -101,7 +103,6 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
             ⭐ {rating}
           </span>
 
-          {/* Render genres only if we actually have them */}
           {genreNames.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {genreNames.map((g) => (
@@ -116,8 +117,8 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
           )}
         </div>
 
-        {/* Actions */}
-        <div className="mt-3 flex items-center gap-2">
+        {/* Actions pinned to bottom */}
+        <div className="mt-auto flex items-center gap-2">
           <button
             onClick={() => onToggle(movie.id)}
             className="w-full rounded-lg bg-zinc-800/70 py-1.5 text-xs font-medium text-zinc-200 ring-1 ring-zinc-700/60 hover:bg-zinc-800"
