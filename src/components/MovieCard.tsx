@@ -1,6 +1,6 @@
 // src/components/MovieCard.tsx
-// Cards are equal height: outer container is flex-col; title has min height;
-// meta row has fixed min height; actions are pushed to bottom with mt-auto.
+// Cards are equal height; Favorite button is reliably clickable;
+// Button row has comfy spacing.
 
 import { Link } from "react-router-dom";
 import { TMDB_GENRES } from "@/constants/genres";
@@ -60,9 +60,7 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
   // Build genre names from either genre_ids or genres array
   let genreNames: string[] = [];
   if (Array.isArray(movie.genre_ids) && movie.genre_ids.length > 0) {
-    genreNames = movie.genre_ids
-      .map((id) => TMDB_GENRES[id])
-      .filter(Boolean) as string[];
+    genreNames = movie.genre_ids.map((id) => TMDB_GENRES[id]).filter(Boolean) as string[];
   } else if (Array.isArray(movie.genres) && movie.genres.length > 0) {
     genreNames = movie.genres
       .map((g) => (typeof g === "string" ? g : g.name))
@@ -90,7 +88,7 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
       {/* Content */}
       <div className="flex flex-1 flex-col px-4 pt-3 pb-3">
         {/* Title: fixed min height for two lines */}
-        <div className="text-sm font-medium text-zinc-200 line-clamp-2 min-h-[40px]">
+        <div className="min-h-[40px] text-sm font-medium text-zinc-200 line-clamp-2">
           {title}
         </div>
 
@@ -118,16 +116,23 @@ export default function MovieCard({ movie, isFav, onToggle }: Props) {
         </div>
 
         {/* Actions pinned to bottom */}
-        <div className="mt-auto flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-3">
           <button
-            onClick={() => onToggle(movie.id)}
-            className="w-full rounded-lg bg-zinc-800/70 py-1.5 text-xs font-medium text-zinc-200 ring-1 ring-zinc-700/60 hover:bg-zinc-800"
+            type="button"
+            onClick={(e) => {
+              // Prevent any parent click handlers from hijacking the click
+              e.stopPropagation();
+              onToggle(movie.id);
+            }}
+            aria-pressed={isFav}
+            className="w-full rounded-lg bg-zinc-800/70 py-1.5 text-xs font-medium text-zinc-200 ring-1 ring-zinc-700/60 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
           >
             {isFav ? "Unfavorite" : "Favorite"}
           </button>
+
           <Link
             to={`/details/${movie.id}`}
-            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500"
+            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
           >
             Details
           </Link>
