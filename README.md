@@ -1,6 +1,8 @@
 # Movie App Starter (React + Vite + TypeScript + Tailwind)
 
-A starter movie app with modern frontend tools, local favorites, and a secure TMDb integration.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-blue?style=for-the-badge)](https://my-movie-app-nine-mu.vercel.app)
+
+A starter movie app with modern frontend tools, local favorites, and a secure TMDB integration.
 
 ---
 
